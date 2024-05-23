@@ -1,4 +1,4 @@
-package shop.mtcoding.bank.domain.user;
+package shop.mtcoding.bank.domain.account;
 
 import java.time.LocalDateTime;
 
@@ -9,42 +9,40 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shop.mtcoding.bank.domain.user.User;
 
-@NoArgsConstructor // 스프링이 User 객체생성할 때 빈생성자로 new를 하기 때문!!
+@NoArgsConstructor
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "user_tb")
+@Table(name = "account_tb")
 @Entity
-public class User { //extends 시간설정 (상속)
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false, length = 20)
-    private String username;
+    private Long number; // 계좌번호
 
-    @Column(nullable = false, length = 60) // 패스워드 인코딩 (BCrypt)
-    private String password;
+    @Column(nullable = false, length = 4)
+    private Long password; // 계좌번호 비밀번호
 
-    @Column(nullable = false, length = 20)
-    private String email;
-
-    @Column(nullable = false, length = 20)
-    private String fullname;
-
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserEnum role; // ADMIN, CUSTOMER
+    private Long balance; // 잔액 (기본값 1000원)
+
+    //항상 ORM에서 fk의 주인은 Many Entity 쪽이다.
+    @ManyToOne(fetch = FetchType.LAZY) // account.getUser().아무필드호출() == Lazy 발동
+    private User user; // user_id
 
     @CreatedDate // Insert
     @Column(nullable = false)
@@ -55,17 +53,17 @@ public class User { //extends 시간설정 (상속)
     private LocalDateTime updatedAt;
 
     @Builder
-    public User(Long id, String username, String password, String email, String fullname, UserEnum role,
-            LocalDateTime createedAt, LocalDateTime updatedAt) {
+    public Account(Long id, Long number, Long password, Long balance, User user, LocalDateTime createedAt,
+            LocalDateTime updatedAt) {
         this.id = id;
-        this.username = username;
+        this.number = number;
         this.password = password;
-        this.email = email;
-        this.fullname = fullname;
-        this.role = role;
+        this.balance = balance;
+        this.user = user;
         this.createedAt = createedAt;
         this.updatedAt = updatedAt;
     }
 
+    
     
 }
