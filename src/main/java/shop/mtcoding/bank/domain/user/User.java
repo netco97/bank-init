@@ -48,7 +48,7 @@ public class User { //extends 시간설정 (상속)
 
     @CreatedDate // Insert
     @Column(nullable = false)
-    private LocalDateTime createedAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate // Insert, Update
     @Column(nullable = false)
@@ -56,14 +56,14 @@ public class User { //extends 시간설정 (상속)
 
     @Builder
     public User(Long id, String username, String password, String email, String fullname, UserEnum role,
-            LocalDateTime createedAt, LocalDateTime updatedAt) {
+            LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.fullname = fullname;
         this.role = role;
-        this.createedAt = createedAt;
+        this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 

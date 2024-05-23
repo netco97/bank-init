@@ -46,21 +46,21 @@ public class Account {
 
     @CreatedDate // Insert
     @Column(nullable = false)
-    private LocalDateTime createedAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate // Insert, Update
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
     @Builder
-    public Account(Long id, Long number, Long password, Long balance, User user, LocalDateTime createedAt,
+    public Account(Long id, Long number, Long password, Long balance, User user, LocalDateTime createdAt,
             LocalDateTime updatedAt) {
         this.id = id;
         this.number = number;
         this.password = password;
         this.balance = balance;
         this.user = user;
-        this.createedAt = createedAt;
+        this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
