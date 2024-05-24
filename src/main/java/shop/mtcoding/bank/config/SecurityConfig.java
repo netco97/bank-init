@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,7 +13,11 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import shop.mtcoding.bank.domain.user.UserEnum;
+import shop.mtcoding.bank.dto.ResponseDTO;
+import shop.mtcoding.bank.util.CustomResponseUtil;
 
 @Configuration
 public class SecurityConfig {
@@ -31,7 +36,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         log.debug("디버그 : filterChain 빈 등록됨");
 
-        http.headers(h -> h.frameOptions(f -> f.sameOrigin()));
+        http.headers(h -> h.frameOptions(f -> f.sameOrigin())); //iframe 허용 X
         http.csrf(cf->cf.disable());
         http.cors(co->co.configurationSource(configurationSource()));
 
@@ -44,6 +49,10 @@ public class SecurityConfig {
         //httpBasic은 브라우저가 팝업창을 이용해서 사용자 인증을 진행한다.
         http.httpBasic(hb->hb.disable());
 
+        // Exception 가로채기
+        http.exceptionHandling(e-> e.authenticationEntryPoint((request, response, authException) -> {
+            CustomResponseUtil.unAuthentication(response, "로그인을 진행해 주세요.");
+        }));
 
         http.authorizeHttpRequests(c->
                 c.requestMatchers("/api/s/**").authenticated()
