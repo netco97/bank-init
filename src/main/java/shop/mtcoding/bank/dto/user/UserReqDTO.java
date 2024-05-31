@@ -13,6 +13,13 @@ import shop.mtcoding.bank.domain.user.UserEnum;
 
 public class UserReqDTO {
     
+    @Setter
+    @Getter
+    public static class LoginReqDTO{
+        private String username;
+        private String password;
+    }
+
     @ToString
     @Setter
     @Getter
